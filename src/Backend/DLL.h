@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <dlfcn.h>
+
 #include <stddef.h>
 
 namespace Backend
@@ -24,13 +25,17 @@ namespace Backend
 			public:
 				// Constructors and destructor
 				Library() {}
+				Library(void *ptr, size_t len) { Open(ptr, len); }
 				~Library() { Close(); }
 
 				// DLL functions
-				bool Open(void *ptr, size_t len);
+				Library &Open(void *ptr, size_t len);
 				void Close();
 
 				void *GetSymbol(const char *name);
+
+				// Bool operator
+				explicit operator bool() const noexcept { return dll != nullptr; }
 		};
 
 		// DLL functions

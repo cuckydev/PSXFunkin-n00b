@@ -8,43 +8,74 @@
 #include "Backend/DLL.h"
 
 #include <psxgpu.h>
-#include <stdio.h>
 
+#include <stdio.h>
+#include <string.h>
+
+namespace MainLoop
+{
+	// Main loop functions
+	static char next_library[64];
+
+	void __attribute__ ((noinline)) NextLibrary(const char *name)
+	{
+		// Set next library name
+		strcpy(next_library, name);
+	}
+}
+
+// Entry point
 int main(int argc, char *argv[])
 {
 	// GPU stuff
 	ResetGraph(0);
-	DrawSync(0);
-	VSync(0);
 
 	// Initialize backend systems
-	printf("Initing cd...\n");
 	Backend::CD::Init();
-	printf("Initing dll...\n");
 	Backend::DLL::Init();
-	printf("System init done!\n");
 
-	// Load DLL
-	printf("Loading WEEK1.DLL...\n");
-	size_t len;
-	void *ptr = Backend::CD::FindReadFile("\\WEEK1.DLL;1", &len);
-	Backend::DLL::Library week_dll;
-	if (week_dll.Open(ptr, len))
-	{
-		printf("Failed to open WEEK1.DLL\n");
-		return 1;
-	}
+	// Run game loop
+	MainLoop::NextLibrary("\\WEEK1.DLL;1");
 
-	printf("Opened WEEK1.DLL!\n");
-	printf("Finding init...\n");
-	void (*init)(void) = (void (*)(void))week_dll.GetSymbol("Init");
-	if (init == nullptr)
+	while (1)
 	{
-		printf("Couldn't find init\n");
-		return 1;
+		// Load library file
+		printf("Loading library %s\n", MainLoop::next_library);
+		Backend::CD::File file(MainLoop::next_library);
+		if (!file)
+		{
+			printf("Failed to load library file\n");
+			return 1;
+		}
+		else
+		{
+			// Load DLL library
+			Backend::DLL::Library library(file.ptr, file.len);
+			if (!library)
+			{
+				printf("Failed to load library\n");
+				return 1;
+			}
+			else
+			{
+				// Run library
+				void (*library_run)() = (void(*)())library.GetSymbol("Run");
+				if (library_run == nullptr)
+				{
+					printf("Failed to get \"Run\" in library\n");
+					return 1;
+				}
+				else
+				{
+					DL_CALL(library_run);
+				}
+			}
+		}
+
+		// End frame
+		DrawSync(0);
+		VSync(0);
 	}
-	printf("Found Init!\n");
-	DL_CALL(init);
 
 	// Deinitialize backend systems
 	Backend::DLL::Quit();

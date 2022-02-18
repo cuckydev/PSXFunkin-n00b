@@ -4,16 +4,10 @@
 	file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "Main.h"
-#include <stdio.h>
+#pragma once
 
-// Game state interface
-extern "C"
+namespace MainLoop
 {
-	void Run();
-}
-
-void Run()
-{
-	MainLoop::NextLibrary("\\MENU.DLL;1");
+	// Main loop functions
+	void NextLibrary(const char *name);
 }

@@ -15,18 +15,23 @@ namespace Backend
 	namespace DLL
 	{
 		// Library class
-		bool Library::Open(void *ptr, size_t len)
+		Library &Library::Open(void *ptr, size_t len)
 		{
+			// Close previous DLL
+			Close();
+
 			// Make sure we were given a file
 			if (ptr == nullptr)
-				return true;
+			{
+				dll = nullptr;
+				return *this;
+			}
 
 			// Load DLL
-			dll = DL_CreateDLL(ptr, len, (DL_ResolveMode)(RTLD_LAZY | RTLD_FREE_ON_DESTROY));
-			if (dll == nullptr)
-				return true;
+			if ((dll = DL_CreateDLL(ptr, len, (DL_ResolveMode)RTLD_LAZY)) == nullptr)
+				return *this;
 
-			return false;
+			return *this;
 		}
 
 		void Library::Close()
@@ -41,6 +46,7 @@ namespace Backend
 
 		void *Library::GetSymbol(const char *name)
 		{
+			// Find symbol in loaded DLL and return pointer
 			return DL_GetDLLSymbol(dll, name);
 		}
 
@@ -48,17 +54,14 @@ namespace Backend
 		void Init()
 		{
 			// Read .MAP file
-			size_t len;
-			void *ptr = CD::FindReadFile("\\MAIN.MAP;1", &len);
-			if (ptr == nullptr)
+			CD::File file_map("\\MAIN.MAP;1");
+			if (!file_map)
 			{
 				printf("Failed to read MAIN.MAP");
 				return;
 			}
-			((char*)ptr)[len] = '\0';
-			printf("%s\n", ptr);
 
-			if (!DL_ParseSymbolMap((char*)ptr, len))
+			if (!DL_ParseSymbolMap((char*)file_map.ptr, file_map.len))
 			{
 				printf("Failed to parse MAIN.MAP");
 				return;
@@ -67,7 +70,7 @@ namespace Backend
 
 		void Quit()
 		{
-			// Deinitialize DLL
+			// Deinitialize DLL system
 		}
 	}
 }

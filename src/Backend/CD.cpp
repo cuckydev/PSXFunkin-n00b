@@ -13,56 +13,50 @@ namespace Backend
 {
 	namespace CD
 	{
+		// CD file class
+		// File functions
+		File &File::Open(const char *name)
+		{
+			// Find file on CD
+			CdlFILE fp;
+			if (!CdSearchFile(&fp, name))
+			{
+				ptr = nullptr;
+				return *this;
+			}
+
+			// Allocate buffer for file
+			len = (fp.size + 2047) & ~2047;
+			if ((ptr = malloc(len)) == nullptr)
+				return *this;
+
+			// Read to buffer
+			CdControl(CdlSetloc, &fp.pos, 0);
+			CdRead(len >> 11, (u_long*)ptr, CdlModeSpeed);
+			if (CdReadSync(0, 0) < 0)
+			{
+				ptr = nullptr;
+				return *this;
+			}
+
+			return *this;
+		}
+
+		void File::Close()
+		{
+
+		}
+
 		// CD functions
 		void Init()
 		{
-			// Initialize CD
+			// Initialize CD system
 			CdInit();
 		}
 
 		void Quit()
 		{
-			// Deinitialize CD
-		}
-
-		bool FindFile(CdlFILE *fp, const char *name)
-		{
-			// Find file on CD
-			if (!CdSearchFile(fp, name))
-				return true;
-			return false;
-		}
-
-		void *ReadFile(CdlFILE *fp, size_t *size)
-		{
-			// Allocate buffer for file
-			size_t len = (fp->size + 2047) & ~2047;
-
-			void *ptr = malloc(len);
-			if (ptr == nullptr)
-				return nullptr;
-
-			// Read to buffer
-			CdControl(CdlSetloc, &fp->pos, 0);
-			CdRead(len >> 11, (u_long*)ptr, CdlModeSpeed);
-			if (CdReadSync(0, 0) < 0)
-				return nullptr;
-
-			// Return buffer and size
-			if (size != nullptr)
-				*size = fp->size;
-			return ptr;
-		}
-
-		void *FindReadFile(const char *name, size_t *size)
-		{
-			// Find file
-			CdlFILE fp;
-			if (FindFile(&fp, name))
-				return nullptr;
-			
-			// Read file
-			return ReadFile(&fp, size);
+			// Deinitialize CD system
 		}
 	}
 }

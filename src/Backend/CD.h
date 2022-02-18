@@ -6,19 +6,39 @@
 
 #pragma once
 
-#include <stddef.h>
 #include <psxcd.h>
+
+#include <stdlib.h>
+#include <stddef.h>
 
 namespace Backend
 {
 	namespace CD
 	{
+		// CD file class
+		class File
+		{
+			public:
+				// File data
+				void *ptr = nullptr;
+				size_t len;
+
+			public:
+				// Constructors and destructor
+				File() {}
+				File(const char *name) { Open(name); }
+				~File() { free(ptr); }
+
+				// File functions
+				File &Open(const char *name);
+				void Close();
+
+				// Bool operator
+				explicit operator bool() const noexcept { return ptr != nullptr; }
+		};
+
 		// CD functions
 		void Init();
 		void Quit();
-
-		bool FindFile(CdlFILE *fp, const char *name);
-		void *ReadFile(CdlFILE *fp, size_t *size);
-		void *FindReadFile(const char *name, size_t *size);
 	}
 }
