@@ -35,12 +35,11 @@ int main(int argc, char *argv[])
 	Backend::DLL::Init();
 
 	// Run game loop
-	MainLoop::NextLibrary("\\WEEK1.DLL;1");
+	MainLoop::NextLibrary("\\MENU.DLL;1");
 
 	while (1)
 	{
 		// Load library file
-		printf("Loading library %s\n", MainLoop::next_library);
 		Backend::CD::File file(MainLoop::next_library);
 		if (!file)
 		{

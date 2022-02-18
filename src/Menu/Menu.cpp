@@ -4,20 +4,13 @@
 	file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
+#include "Menu.h"
+
 #include "Main.h"
-#include <stdio.h>
 
 // Game state interface
-extern "C"
-{
-	void Run();
-}
 
 void Run()
 {
-	printf("WEEK1 LOCK\n");
-	while (1)
-	{
-		
-	}
+	MainLoop::NextLibrary("\\WEEK1.DLL;1");
 }
