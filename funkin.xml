@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<iso_project
+	image_name="${PROJECT_SOURCE_DIR}/bin/${CD_IMAGE_NAME}.bin"
+	cue_sheet="${PROJECT_SOURCE_DIR}/bin/${CD_IMAGE_NAME}.cue"
+>
+	<track type="data">
+		<identifiers
+			system        = "PLAYSTATION"
+			volume        = "PSXFUNKIN"
+			volume_set    = "PSXFUNKIN"
+			publisher     = "CUCKYDEV"
+			data_preparer = "PSN00BSDK ${PSN00BSDK_VERSION}"
+			application   = "PLAYSTATION"
+			copyright     = "NINJAMUFFIN99"
+		/>
+		<license file="${PROJECT_SOURCE_DIR}/iso/licensea.dat"/>
+
+		<directory_tree>
+			<file name="SYSTEM.CNF"  type="data" source="${PROJECT_SOURCE_DIR}/iso/SYSTEM.CNF"/>
+
+			<file name="SCUS_000.00" type="data" source="PSXFunkin.exe"/>
+			<file name="MAIN.MAP"	type="data" source="PSXFunkin.map" />
+
+			<file name="WEEK1.DLL"	type="data" source="PSXFunkin_Week1.dll" />
+
+			<dummy sectors="1024"/>
+		</directory_tree>
+	</track>
+</iso_project>

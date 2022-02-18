@@ -1,0 +1,11 @@
+# Exclude copyrighted files
+iso/LICENSE*.DAT
+
+# Exclude build files
+build/
+bin/
+
+# Ignore IDE files
+.vscode/
+
+# Big Chungus
