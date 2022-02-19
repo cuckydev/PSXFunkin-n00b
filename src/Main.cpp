@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <string.h>
 
+const void *const DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
+	(void*)&MainLoop::NextLibrary
+};
+
 namespace MainLoop
 {
 	// Main loop functions
