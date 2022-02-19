@@ -28,7 +28,7 @@ namespace Backend
 			}
 
 			// Load DLL
-			if ((dll = DL_CreateDLL(ptr, len, (DL_ResolveMode)RTLD_LAZY)) == nullptr)
+			if ((dll = DL_CreateDLL(ptr, len, RTLD_NOW)) == nullptr)
 				return *this;
 
 			return *this;
@@ -61,6 +61,7 @@ namespace Backend
 				return;
 			}
 
+			// Parse .MAP file
 			if (!DL_ParseSymbolMap((char*)file_map.ptr, file_map.len))
 			{
 				printf("Failed to parse MAIN.MAP");

@@ -15,6 +15,8 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	"src/Main.h"
 
 	# Backend
+	"src/Backend/GPU.cpp"
+	"src/Backend/GPU.h"
 	"src/Backend/CD.cpp"
 	"src/Backend/CD.h"
 	"src/Backend/DLL.cpp"

@@ -4,10 +4,9 @@
 	file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
+#include "Backend/GPU.h"
 #include "Backend/CD.h"
 #include "Backend/DLL.h"
-
-#include <psxgpu.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +14,7 @@
 namespace MainLoop
 {
 	// Main loop functions
-	static char next_library[64];
+	static char next_library[16];
 
 	void __attribute__ ((noinline)) NextLibrary(const char *name)
 	{
@@ -27,10 +26,8 @@ namespace MainLoop
 // Entry point
 int main(int argc, char *argv[])
 {
-	// GPU stuff
-	ResetGraph(0);
-
 	// Initialize backend systems
+	Backend::GPU::Init();
 	Backend::CD::Init();
 	Backend::DLL::Init();
 
@@ -70,15 +67,12 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-
-		// End frame
-		DrawSync(0);
-		VSync(0);
 	}
 
 	// Deinitialize backend systems
 	Backend::DLL::Quit();
 	Backend::CD::Quit();
+	Backend::GPU::Quit();
 
 	return 0;
 }

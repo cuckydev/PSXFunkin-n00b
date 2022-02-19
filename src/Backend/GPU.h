@@ -4,16 +4,16 @@
 	file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "Week1.h"
+#pragma once
 
-#include "Main.h"
-#include "Backend/GPU.h"
-
-// Game state interface
-void Run()
+namespace Backend
 {
-	while (1)
+	namespace GPU
 	{
-		Backend::GPU::Flip();
+		// GPU functions
+		void Init();
+		void Quit();
+
+		void Flip();
 	}
 }
