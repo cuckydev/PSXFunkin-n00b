@@ -14,7 +14,7 @@
 #include <string.h>
 
 // Functions exposed to libraries
-const void *const DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
+void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	(void*)&MainLoop::NextLibrary,
 	(void*)&Backend::GPU::Camera::FillRect,
 	(void*)&Backend::GPU::Init,

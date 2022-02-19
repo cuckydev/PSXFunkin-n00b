@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <iso_project
-	image_name="${PROJECT_SOURCE_DIR}/bin/${CD_IMAGE_NAME}.bin"
-	cue_sheet="${PROJECT_SOURCE_DIR}/bin/${CD_IMAGE_NAME}.cue"
+	image_name="${CD_IMAGE_NAME}.bin"
+	cue_sheet="${CD_IMAGE_NAME}.cue"
 >
 	<track type="data">
 		<identifiers
@@ -13,7 +13,7 @@
 			application   = "PLAYSTATION"
 			copyright     = "NINJAMUFFIN99"
 		/>
-		<license file="${PROJECT_SOURCE_DIR}/iso/licensea.dat"/>
+		<license file="${PROJECT_SOURCE_DIR}/iso/LICENSEA.DAT"/>
 
 		<directory_tree>
 			<file name="SYSTEM.CNF" type="data" source="${PROJECT_SOURCE_DIR}/iso/SYSTEM.CNF"/>

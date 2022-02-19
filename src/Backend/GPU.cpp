@@ -8,6 +8,8 @@
 
 #include <psxgpu.h>
 
+#include <stdio.h>
+
 namespace Backend
 {
 	namespace GPU
@@ -22,9 +24,9 @@ namespace Backend
 			DRAWENV draw;
 			
 			// Buffers
-			unsigned long ot[GFX_OTLEN]; // Ordering table
-			unsigned char pri[0x2000]; // Primitive buffer
-			unsigned char *prip;
+			u_long ot[GFX_OTLEN]; // Ordering table
+			uint8_t pri[0x2000]; // Primitive buffer
+			uint8_t *prip;
 		} Gfx_Buffer;
 
 		static Gfx_Buffer gfx_buffer[2];
@@ -35,15 +37,15 @@ namespace Backend
 		void Camera::FillRect(const Rect<fixed_t> &dst, uint8_t r, uint8_t g, uint8_t b)
 		{
 			// Get destination coordinates
-			fixed_t left = dst.x - camera_x;
-			fixed_t top = dst.y - camera_y;
-			fixed_t right = left + dst.w;
-			fixed_t bottom = top + dst.h;
+			fixed_t left   = dst.x - camera_x;
+			fixed_t top    = dst.y - camera_y;
+			fixed_t right  = left + dst.w;
+			fixed_t bottom = top  + dst.h;
 
-			left = FIXED_MUL(left, camera_zoom) >> FIXED_SHIFT;
-			top = FIXED_MUL(top, camera_zoom) >> FIXED_SHIFT;
-			right = FIXED_MUL(right, camera_zoom) >> FIXED_SHIFT;
-			bottom = FIXED_MUL(bottom, camera_zoom) >> FIXED_SHIFT;
+			left   = (FIXED_MUL(left,   camera_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
+			top    = (FIXED_MUL(top,    camera_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
+			right  = (FIXED_MUL(right,  camera_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
+			bottom = (FIXED_MUL(bottom, camera_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
 
 			// Setup poly
 			POLY_F4 *poly = (POLY_F4*)gfx_bufferp->prip;
@@ -99,11 +101,9 @@ namespace Backend
 			FntLoad(960, 0);
 			FntOpen(0, 8, 320, 224, 0, 100);
 
-			// Enable GPU
-			SetDispMask(1);
-
 			// Set and initialize buffer
 			gfx_bufferp = &gfx_buffer[0];
+			printf("%p\n", gfx_bufferp);
 
 			gfx_bufferp->prip = gfx_bufferp->pri;
 			ClearOTagR(gfx_bufferp->ot, GFX_OTLEN);
@@ -116,6 +116,9 @@ namespace Backend
 
 		void Flip()
 		{
+			// Enable GPU
+			SetDispMask(1);
+
 			// Use display and draw environment
 			PutDispEnv(&gfx_bufferp->disp);
 			PutDrawEnv(&gfx_bufferp->draw);

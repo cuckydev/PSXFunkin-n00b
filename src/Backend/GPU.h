@@ -44,8 +44,9 @@ namespace Backend
 				// Camera functions
 				void Set(unsigned int zindex, fixed_t x, fixed_t y, fixed_t zoom)
 				{
-					camera_x = x - FIXED_DEC(SCREEN_WIDTH, 2);
-					camera_y = y - FIXED_DEC(SCREEN_HEIGHT, 2);
+					camera_zindex = zindex;
+					camera_x = x;
+					camera_y = y;
 					camera_zoom = zoom;
 				}
 
