@@ -13,13 +13,18 @@
 #include <stdio.h>
 #include <string.h>
 
+// Functions exposed to libraries
 const void *const DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
-	(void*)&MainLoop::NextLibrary
+	(void*)&MainLoop::NextLibrary,
+	(void*)&Backend::GPU::Camera::FillRect,
+	(void*)&Backend::GPU::Init,
+	(void*)&Backend::GPU::Quit,
+	(void*)&Backend::GPU::Flip
 };
 
+// Main loop functions
 namespace MainLoop
 {
-	// Main loop functions
 	static char next_library[16];
 
 	void NextLibrary(const char *name)
@@ -32,6 +37,9 @@ namespace MainLoop
 // Entry point
 int main(int argc, char *argv[])
 {
+	// Force exposed functions to link
+	volatile void **dummy = (volatile void**)DO_NOT_STRIP;
+
 	// Initialize backend systems
 	Backend::GPU::Init();
 	Backend::CD::Init();

@@ -8,13 +8,6 @@
 
 #include <psxgpu.h>
 
-const void *const DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
-	(void*)&Backend::GPU::Camera::FillRect,
-	(void*)&Backend::GPU::Init,
-	(void*)&Backend::GPU::Quit,
-	(void*)&Backend::GPU::Flip
-};
-
 namespace Backend
 {
 	namespace GPU
