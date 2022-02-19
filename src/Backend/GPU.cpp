@@ -8,12 +8,19 @@
 
 #include <psxgpu.h>
 
+const void *const DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
+	(void*)&Backend::GPU::Camera::FillRect,
+	(void*)&Backend::GPU::Init,
+	(void*)&Backend::GPU::Quit,
+	(void*)&Backend::GPU::Flip
+};
+
 namespace Backend
 {
 	namespace GPU
 	{
 		// Buffer structure
-		#define GFX_OTLEN 1
+		#define GFX_OTLEN 16
 
 		typedef struct
 		{
@@ -29,6 +36,44 @@ namespace Backend
 
 		static Gfx_Buffer gfx_buffer[2];
 		static Gfx_Buffer *gfx_bufferp;
+
+		// Camera class
+		// Camera functions
+		void Camera::FillRect(const Rect<fixed_t> &dst, uint8_t r, uint8_t g, uint8_t b)
+		{
+			// Get destination coordinates
+			fixed_t left = dst.x - camera_x;
+			fixed_t top = dst.y - camera_y;
+			fixed_t right = left + dst.w;
+			fixed_t bottom = top + dst.h;
+
+			left = FIXED_MUL(left, camera_zoom) >> FIXED_SHIFT;
+			top = FIXED_MUL(top, camera_zoom) >> FIXED_SHIFT;
+			right = FIXED_MUL(right, camera_zoom) >> FIXED_SHIFT;
+			bottom = FIXED_MUL(bottom, camera_zoom) >> FIXED_SHIFT;
+
+			// Setup poly
+			POLY_F4 *poly = (POLY_F4*)gfx_bufferp->prip;
+			gfx_bufferp->prip += sizeof(POLY_FT4);
+
+			setPolyF4(poly);
+			setRGB0(poly, r, g, b);
+
+			poly->x0 = left;
+			poly->y0 = top;
+
+			poly->x1 = right;
+			poly->y1 = top;
+
+			poly->x2 = left;
+			poly->y2 = bottom;
+
+			poly->x3 = right;
+			poly->y3 = bottom;
+
+			// Link poly to ordering table
+			addPrim(gfx_bufferp->ot[camera_zindex], poly);
+		}
 
 		// GPU functions
 		void Init()
@@ -61,6 +106,9 @@ namespace Backend
 			FntLoad(960, 0);
 			FntOpen(0, 8, 320, 224, 0, 100);
 
+			// Enable GPU
+			SetDispMask(1);
+
 			// Set and initialize buffer
 			gfx_bufferp = &gfx_buffer[0];
 
@@ -75,9 +123,6 @@ namespace Backend
 
 		void Flip()
 		{
-			// Enable GPU
-			SetDispMask(1);
-
 			// Use display and draw environment
 			PutDispEnv(&gfx_bufferp->disp);
 			PutDrawEnv(&gfx_bufferp->draw);

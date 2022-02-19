@@ -4,6 +4,8 @@
 	file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
+#include "Main.h"
+
 #include "Backend/GPU.h"
 #include "Backend/CD.h"
 #include "Backend/DLL.h"
@@ -16,7 +18,7 @@ namespace MainLoop
 	// Main loop functions
 	static char next_library[16];
 
-	void __attribute__ ((noinline)) NextLibrary(const char *name)
+	void NextLibrary(const char *name)
 	{
 		// Set next library name
 		strcpy(next_library, name);
@@ -37,6 +39,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		// Load library file
+		printf("Loading library %s\n", MainLoop::next_library);
 		Backend::CD::File file(MainLoop::next_library);
 		if (!file)
 		{

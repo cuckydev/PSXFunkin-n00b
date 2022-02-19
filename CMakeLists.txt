@@ -13,6 +13,7 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	# Program
 	"src/Main.cpp"
 	"src/Main.h"
+	"src/Types.h"
 
 	# Backend
 	"src/Backend/GPU.cpp"
@@ -29,7 +30,6 @@ psn00bsdk_add_library(PSXFunkin_Menu SHARED
 	# Program
 	"src/Menu/Menu.cpp"
 	"src/Menu/Menu.h"
-	"src/Main.h"
 )
 target_include_directories(PSXFunkin_Menu PRIVATE "src")
 
@@ -37,7 +37,6 @@ psn00bsdk_add_library(PSXFunkin_Week1 SHARED
 	# Program
 	"src/Week1/Week1.cpp"
 	"src/Week1/Week1.h"
-	"src/Main.h"
 )
 target_include_directories(PSXFunkin_Week1 PRIVATE "src")
 
