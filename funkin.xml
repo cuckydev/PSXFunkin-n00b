@@ -24,7 +24,6 @@
 			<file name="MENU.DLL"  type="data" source="PSXFunkin_Menu.dll" />
 			<file name="WEEK1.DLL" type="data" source="PSXFunkin_Week1.dll" />
 
-			<file name="TEST.BIN" type="data" source="${PROJECT_SOURCE_DIR}/test.enc"/>
 			<dummy sectors="1024"/>
 		</directory_tree>
 	</track>

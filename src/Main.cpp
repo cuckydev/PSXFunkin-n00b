@@ -14,8 +14,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Saxman.h"
-
 // Functions exposed to libraries
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	// Main
@@ -52,18 +50,6 @@ int main(int argc, char *argv[])
 	Backend::Timer::Init();
 	Backend::CD::Init();
 	Backend::DLL::Init();
-
-	// Crazy
-	Backend::CD::File test("\\TEST.BIN;1");
-	if (test)
-	{
-		uint32_t start = Backend::Timer::GetTicks();
-		Saxman::Saxman saxman;
-		uint8_t buffa[173120];
-		saxman.Decode((uint8_t*)test.ptr, test.len, buffa);
-		uint32_t delta = Backend::Timer::GetTicks() - start;
-		printf("Took %dms\n", delta);
-	}
 
 	// Run game loop
 	MainLoop::NextLibrary("\\MENU.DLL;1");
