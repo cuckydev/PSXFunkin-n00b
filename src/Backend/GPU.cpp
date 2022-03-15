@@ -6,10 +6,6 @@
 
 #include "Backend/GPU.h"
 
-#include <psxgpu.h>
-
-#include <stdio.h>
-
 namespace Backend
 {
 	namespace GPU
@@ -24,51 +20,13 @@ namespace Backend
 			DRAWENV draw;
 			
 			// Buffers
-			u_long ot[GFX_OTLEN]; // Ordering table
+			u_long ot[1 + GFX_OTLEN]; // Ordering table
 			uint8_t pri[0x2000]; // Primitive buffer
 			uint8_t *prip;
-		} Gfx_Buffer;
+		} Buffer;
 
-		static Gfx_Buffer gfx_buffer[2];
-		static Gfx_Buffer *gfx_bufferp;
-
-		// Camera class
-		// Camera functions
-		void Camera::FillRect(const Rect<fixed_t> &dst, uint8_t r, uint8_t g, uint8_t b)
-		{
-			// Get destination coordinates
-			fixed_t left   = dst.x - camera_x;
-			fixed_t top    = dst.y - camera_y;
-			fixed_t right  = left + dst.w;
-			fixed_t bottom = top  + dst.h;
-
-			left   = (FIXED_MUL(left,   camera_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
-			top    = (FIXED_MUL(top,    camera_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
-			right  = (FIXED_MUL(right,  camera_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
-			bottom = (FIXED_MUL(bottom, camera_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
-
-			// Setup poly
-			POLY_F4 *poly = (POLY_F4*)gfx_bufferp->prip;
-			gfx_bufferp->prip += sizeof(POLY_FT4);
-
-			setPolyF4(poly);
-			setRGB0(poly, r, g, b);
-
-			poly->x0 = left;
-			poly->y0 = top;
-
-			poly->x1 = right;
-			poly->y1 = top;
-
-			poly->x2 = left;
-			poly->y2 = bottom;
-
-			poly->x3 = right;
-			poly->y3 = bottom;
-
-			// Link poly to ordering table
-			addPrim(gfx_bufferp->ot[camera_zindex], poly);
-		}
+		static Buffer buffer[2];
+		static Buffer *bufferp;
 
 		// GPU functions
 		void Init()
@@ -78,19 +36,19 @@ namespace Backend
 			ResetGraph(0);
 
 			// Initialize display environment
-			SetDefDispEnv(&gfx_buffer[0].disp, 0, 0, 320, 240);
-			SetDefDispEnv(&gfx_buffer[1].disp, 0, 240, 320, 240);
+			SetDefDispEnv(&buffer[0].disp, 0, 0, 320, 240);
+			SetDefDispEnv(&buffer[1].disp, 0, 240, 320, 240);
 
 			// Initialize draw environment
-			SetDefDrawEnv(&gfx_buffer[0].draw, 0, 240, 320, 240);
-			SetDefDrawEnv(&gfx_buffer[1].draw, 0, 0, 320, 240);
+			SetDefDrawEnv(&buffer[0].draw, 0, 240, 320, 240);
+			SetDefDrawEnv(&buffer[1].draw, 0, 0, 320, 240);
 
 			// Set video mode depending on BIOS region
 			switch(*(char*)0xbfc7ff52)
 			{
 				case 'E':
 					SetVideoMode(MODE_PAL);
-					gfx_buffer[0].disp.screen.y = gfx_buffer[1].disp.screen.y = 24;
+					buffer[0].disp.screen.y = buffer[1].disp.screen.y = 24;
 					break;
 				default:
 					SetVideoMode(MODE_NTSC);
@@ -102,11 +60,10 @@ namespace Backend
 			FntOpen(0, 8, 320, 224, 0, 100);
 
 			// Set and initialize buffer
-			gfx_bufferp = &gfx_buffer[0];
-			printf("%p\n", gfx_bufferp);
+			bufferp = &buffer[0];
 
-			gfx_bufferp->prip = gfx_bufferp->pri;
-			ClearOTagR(gfx_bufferp->ot, GFX_OTLEN);
+			bufferp->prip = bufferp->pri;
+			ClearOTagR(bufferp->ot, 1 + GFX_OTLEN);
 		}
 
 		void Quit()
@@ -120,21 +77,30 @@ namespace Backend
 			SetDispMask(1);
 
 			// Use display and draw environment
-			PutDispEnv(&gfx_bufferp->disp);
-			PutDrawEnv(&gfx_bufferp->draw);
+			PutDispEnv(&bufferp->disp);
+			PutDrawEnv(&bufferp->draw);
 
 			// Display screen
 			DrawSync(0);
 			VSync(0);
 
-			DrawOTag(&gfx_bufferp->ot[GFX_OTLEN - 1]);
+			DrawOTag(&bufferp->ot[GFX_OTLEN]);
 			FntFlush(-1);
 
 			// Flip and initialize buffer
-			gfx_bufferp = (gfx_bufferp == &gfx_buffer[0]) ? &gfx_buffer[1] : &gfx_buffer[0];
+			bufferp = (bufferp == &buffer[0]) ? &buffer[1] : &buffer[0];
 
-			gfx_bufferp->prip = gfx_bufferp->pri;
-			ClearOTagR(gfx_bufferp->ot, GFX_OTLEN);
+			bufferp->prip = bufferp->pri;
+			ClearOTagR(bufferp->ot, 1 + GFX_OTLEN);
+		}
+
+		void *AllocPrim(unsigned int zindex, size_t size)
+		{
+			// Allocate and link primitive of given size to the given ordering table index
+			void *pri = bufferp->prip;
+			bufferp->prip += size;
+			addPrim(&bufferp->ot[1 + zindex], pri);
+			return pri;
 		}
 	}
 }

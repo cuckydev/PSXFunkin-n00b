@@ -6,6 +6,7 @@
 
 #include "Main.h"
 
+#include "Backend/Timer.h"
 #include "Backend/GPU.h"
 #include "Backend/CD.h"
 #include "Backend/DLL.h"
@@ -13,13 +14,19 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Saxman.h"
+
 // Functions exposed to libraries
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
+	// Main
 	(void*)&MainLoop::NextLibrary,
-	(void*)&Backend::GPU::Camera::FillRect,
-	(void*)&Backend::GPU::Init,
-	(void*)&Backend::GPU::Quit,
-	(void*)&Backend::GPU::Flip
+
+	// Timer
+	(void*)&Backend::Timer::GetTicks,
+
+	// GPU
+	(void*)&Backend::GPU::Flip,
+	(void*)&Backend::GPU::AllocPrim
 };
 
 // Main loop functions
@@ -42,8 +49,21 @@ int main(int argc, char *argv[])
 
 	// Initialize backend systems
 	Backend::GPU::Init();
+	Backend::Timer::Init();
 	Backend::CD::Init();
 	Backend::DLL::Init();
+
+	// Crazy
+	Backend::CD::File test("\\TEST.BIN;1");
+	if (test)
+	{
+		uint32_t start = Backend::Timer::GetTicks();
+		Saxman::Saxman saxman;
+		uint8_t buffa[173120];
+		saxman.Decode((uint8_t*)test.ptr, test.len, buffa);
+		uint32_t delta = Backend::Timer::GetTicks() - start;
+		printf("Took %dms\n", delta);
+	}
 
 	// Run game loop
 	MainLoop::NextLibrary("\\MENU.DLL;1");
@@ -78,7 +98,7 @@ int main(int argc, char *argv[])
 				}
 				else
 				{
-					DL_CALL(library_run);
+					DL_PRE_CALL(library_run);
 				}
 			}
 		}
@@ -87,6 +107,7 @@ int main(int argc, char *argv[])
 	// Deinitialize backend systems
 	Backend::DLL::Quit();
 	Backend::CD::Quit();
+	Backend::Timer::Quit();
 	Backend::GPU::Quit();
 
 	return 0;

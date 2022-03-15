@@ -8,6 +8,8 @@
 
 #include "Types.h"
 
+#include <psxgpu.h>
+
 namespace Backend
 {
 	namespace GPU
@@ -32,25 +34,64 @@ namespace Backend
 			Low = 3  // 100% background +  25% foreground
 		};
 
-		// Camera class
-		class Camera
+		// GPU functions
+		void Init();
+		void Quit();
+
+		void Flip();
+
+		void *AllocPrim(unsigned int zindex, size_t size);
+
+		// Layer class
+		class Layer
 		{
 			private:
 				// Index and positioning
-				unsigned int camera_zindex;
-				fixed_t camera_x, camera_y, camera_zoom;
+				unsigned int view_zindex;
+				fixed_t view_x, view_y, view_zoom;
 
 			public:
-				// Camera functions
-				void Set(unsigned int zindex, fixed_t x, fixed_t y, fixed_t zoom)
+				// Layer functions
+				void SetView(unsigned int zindex, fixed_t x, fixed_t y, fixed_t zoom)
 				{
-					camera_zindex = zindex;
-					camera_x = x;
-					camera_y = y;
-					camera_zoom = zoom;
+					view_zindex = zindex;
+					view_x = x;
+					view_y = y;
+					view_zoom = zoom;
 				}
 
-				void FillRect(const Rect<fixed_t> &dst, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF);
+				void FillRect(const Rect<fixed_t> &dst, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF)
+				{
+					// Get destination coordinates
+					fixed_t left   = dst.x - view_x;
+					fixed_t top    = dst.y - view_y;
+					fixed_t right  = left + dst.w;
+					fixed_t bottom = top  + dst.h;
+
+					left   = (FIXED_MUL(left,   view_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
+					top    = (FIXED_MUL(top,    view_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
+					right  = (FIXED_MUL(right,  view_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
+					bottom = (FIXED_MUL(bottom, view_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
+
+					// Setup poly
+					POLY_F4 *poly = (POLY_F4*)AllocPrim(view_zindex, sizeof(POLY_FT4));
+
+					setPolyF4(poly);
+					setRGB0(poly, r, g, b);
+
+					poly->x0 = left;
+					poly->y0 = top;
+
+					poly->x1 = right;
+					poly->y1 = top;
+
+					poly->x2 = left;
+					poly->y2 = bottom;
+
+					poly->x3 = right;
+					poly->y3 = bottom;
+				}
+
 				void BlendRect(const Rect<fixed_t> &dst, BlendMode blend, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF);
 
 				void DrawTex(const Rect<unsigned int> &src, const Rect<fixed_t> &dst, uint8_t r = 0x80, uint8_t g = 0x80, uint8_t b = 0x80);
@@ -58,11 +99,5 @@ namespace Backend
 
 				void DrawSprite(const Rect<unsigned int> &src, fixed_t x, fixed_t y, uint8_t r = 0x80, uint8_t g = 0x80, uint8_t b = 0x80);
 		};
-
-		// GPU functions
-		void Init();
-		void Quit();
-
-		void Flip();
 	}
 }

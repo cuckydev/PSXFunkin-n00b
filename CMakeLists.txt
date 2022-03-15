@@ -14,10 +14,13 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	"src/Main.cpp"
 	"src/Main.h"
 	"src/Types.h"
+	"src/Saxman.h"
 
 	# Backend
 	"src/Backend/GPU.cpp"
 	"src/Backend/GPU.h"
+	"src/Backend/Timer.cpp"
+	"src/Backend/Timer.h"
 	"src/Backend/CD.cpp"
 	"src/Backend/CD.h"
 	"src/Backend/DLL.cpp"

@@ -14,14 +14,14 @@
 // Game state interface
 void Run()
 {
-	Backend::GPU::Camera scene_hud;
+	Backend::GPU::Layer layer_hud;
 
 	while (1)
 	{
-		scene_hud.Set(0, 0, 0, FIXED_UNIT);
+		layer_hud.SetView(0, 0, 0, FIXED_UNIT);
 
 		Rect<fixed_t> porno_rect = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
-		scene_hud.FillRect(porno_rect);
+		layer_hud.FillRect(porno_rect);
 
 		Backend::GPU::Flip();
 	}
