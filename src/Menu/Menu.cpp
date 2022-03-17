@@ -23,6 +23,7 @@ void Run()
 	}
 
 	// Immediately run Week 1
+	Main::LibrarySetValue("difficulty"_h, 2);
 	Main::LibraryNext("\\WEEK1.DLL;1");
 	return;
 }

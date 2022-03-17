@@ -36,21 +36,28 @@ namespace HashMap
 			~HashMap()
 			{
 				// Free buckets
+				Clear();
+			}
+
+			void Clear()
+			{
+				// Free buckets
 				for (auto &i : bucket)
 				{
-					for (Node *node = i; node != NULL;)
+					for (Node *node = i; node != nullptr;)
 					{
 						Node *next = node->next;
 						delete node;
 						node = next;
 					}
+					i = nullptr;
 				}
 			}
 
 			uint32_t Get(uint32_t hash)
 			{
 				// Traverse matching bucket
-				for (Node *node = bucket[hash & bucket_and]; node != NULL; node = node->next)
+				for (Node *node = bucket[hash & bucket_and]; node != nullptr; node = node->next)
 				{
 					// Return matching hash's value
 					if (node->hash == hash)
@@ -62,7 +69,7 @@ namespace HashMap
 			void Set(uint32_t hash, uint32_t value)
 			{
 				// Traverse matching bucket
-				for (Node *node = bucket[hash & bucket_and]; node != NULL; node = node->next)
+				for (Node *node = bucket[hash & bucket_and]; node != nullptr; node = node->next)
 				{
 					// Apply to matching hash's value
 					if (node->hash == hash)
@@ -106,21 +113,28 @@ namespace HashMap
 			~TreeHashMap()
 			{
 				// Free buckets
+				Clear();
+			}
+
+			void Clear()
+			{
+				// Free buckets
 				for (auto &i : bucket)
 				{
-					for (TreeNode<bucket_bits> *node = i; node != NULL;)
+					for (TreeNode<bucket_bits> *node = i; node != nullptr;)
 					{
 						TreeNode<bucket_bits> *next = node->next;
 						delete node;
 						node = next;
 					}
+					i = nullptr;
 				}
 			}
 
 			uint32_t Get(const uint32_t *hash)
 			{
 				// Traverse matching bucket
-				for (TreeNode<bucket_bits> *node = bucket[hash[0] & bucket_and]; node != NULL; node = node->next)
+				for (TreeNode<bucket_bits> *node = bucket[hash[0] & bucket_and]; node != nullptr; node = node->next)
 				{
 					// Traverse matching node
 					if (node->hash == hash[0])
@@ -137,7 +151,7 @@ namespace HashMap
 			void Set(const uint32_t *hash, uint32_t value)
 			{
 				// Traverse matching bucket
-				for (TreeNode<bucket_bits> *node = bucket[hash[0] & bucket_and]; node != NULL; node = node->next)
+				for (TreeNode<bucket_bits> *node = bucket[hash[0] & bucket_and]; node != nullptr; node = node->next)
 				{
 					// Traverse matching node
 					if (node->hash == hash[0])

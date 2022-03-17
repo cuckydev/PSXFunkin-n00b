@@ -19,6 +19,9 @@
 // Game state interface
 void Run()
 {
+	// Use library values
+	printf("ok i was given difficulty %d\n", Main::LibraryGetValue("difficulty"_h));
+
 	// Debug scene
 	Backend::GPU::Layer layer_hud;
 	while (1)

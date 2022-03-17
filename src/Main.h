@@ -11,15 +11,17 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "Hash.h"
 
-#include <stdio.h>
+#include <stdint.h>
 
 namespace Main
 {
 	// Main loop functions
-	void LibraryError(const char *message);
 	void LibraryNext(const char *name);
+	uint32_t LibraryGetValue(uint32_t key);
+	void LibrarySetValue(uint32_t key, uint32_t value);
+	void LibraryClearValue();
 
 	constexpr static inline uint32_t VersionPack(uint8_t major, uint8_t minor, uint8_t patch) { return (major << 16) | (minor << 8) | patch; }
 	bool VersionCheck(uint32_t version);

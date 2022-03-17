@@ -17,14 +17,18 @@
 #include "Backend/DLL.h"
 #include "Backend/Data.h"
 
+#include "HashMap.h"
+
 #include <stdio.h>
 #include <string.h>
 
 // Functions exposed to libraries
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	// Main
-	(void*)&Main::LibraryError,
 	(void*)&Main::LibraryNext,
+	(void*)&Main::LibraryGetValue,
+	(void*)&Main::LibrarySetValue,
+	(void*)&Main::LibraryClearValue,
 	(void*)&Main::VersionCheck,
 
 	// GPU
@@ -42,20 +46,28 @@ void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 // Main loop functions
 namespace Main
 {
-	static char library_error[256];
 	static char library_next[32];
-
-	void LibraryError(const char *message)
-	{
-		// Set library error
-		strcpy(library_error, message);
-		strcpy(library_next, "\\MENU.DLL;1");
-	}
+	static HashMap::HashMap<4> library_hashmap;
 
 	void LibraryNext(const char *name)
 	{
 		// Set next library name
 		strcpy(library_next, name);
+	}
+
+	uint32_t LibraryGetValue(uint32_t key)
+	{
+		return library_hashmap.Get(key);
+	}
+
+	void LibrarySetValue(uint32_t key, uint32_t value)
+	{
+		library_hashmap.Set(key, value);
+	}
+
+	void LibraryClearValue()
+	{
+		library_hashmap.Clear();
 	}
 
 	bool VersionCheck(uint32_t version)
