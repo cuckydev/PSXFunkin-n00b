@@ -16,9 +16,9 @@
 		<license file="${PROJECT_SOURCE_DIR}/iso/LICENSEA.DAT"/>
 
 		<directory_tree>
-			<file name="SYSTEM.CNF" type="data" source="${PROJECT_SOURCE_DIR}/iso/SYSTEM.CNF"/>
+			<file name="SYSTEM.CNF" type="data" source="SYSTEM.CNF"/>
 
-			<file name="SCUS_000.00" type="data" source="PSXFunkin.exe"/>
+			<file name="${TITLE_ID}" type="data" source="PSXFunkin.exe"/>
 			<file name="MAIN.MAP" type="data" source="PSXFunkin.map" />
 
 			<file name="MENU.DLL"  type="data" source="PSXFunkin_Menu.dll" />
