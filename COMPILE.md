@@ -58,10 +58,16 @@ First, `cd` to somewhere safe where you can put source code (such as `Documents`
 
 - `cmake --install ./build`
 
+NOTE: You may need to update PSn00bSDK occasionally. Please repeat the above instructions if you do.
+
+If you're using a dedicated terminal (MSYS2) or otherwise want to 'permanently' install PSn00bSDK, run the following command. (Only run this when you first compile and install PSn00bSDK)
+
+- `echo -e "\nexport PSN00BSDK_LIBS=/usr/local/lib/libpsn00b" >> ~/.bashrc` (Remember to change this if you changed install-prefix)
+
 ## License file
 You'll need to either get a PSX license file and save it as licensea.dat in the `iso/` directory (You find license files within http://www.psxdev.net/downloads.html PsyQ SDK).
 
-Optionally, you can simplpy remove the referencing line `<license file="${PROJECT_SOURCE_DIR}/iso/LICENSEA.DAT"/>` from funkin.xml.
+Optionally, you can simply remove the referencing line `<license file="${PROJECT_SOURCE_DIR}/iso/LICENSEA.DAT"/>` from funkin.xml.
 
 Without the license file, the game may fail on certain emulators due to BIOS checks or console detection.
 
