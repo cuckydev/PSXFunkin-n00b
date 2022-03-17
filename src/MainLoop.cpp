@@ -61,8 +61,6 @@ int main(int argc, char *argv[])
 	Backend::DLL::Init();
 	Backend::Data::Init();
 
-	printf("HI! I AM " TITLE_ID "\n");
-
 	// Run game loop
 	MainLoop::NextLibrary("\\MENU.DLL;1");
 
