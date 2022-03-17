@@ -1,20 +1,34 @@
 /*
  * [PSXFunkin-n00b]
- *   Menu.cpp
+ *   Data.cpp
  * Author(s): Regan Green
- * Date: 03/15/2022
+ * Date: 03/17/2022
 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "Menu.h"
+#include "Data.h"
 
-#include "MainLoop.h"
-
-// Game state interface
-void Run()
+namespace Backend
 {
-	MainLoop::NextLibrary("\\WEEK1.DLL;1");
+	namespace Data
+	{
+		// Data functions
+		void Init()
+		{
+
+		}
+
+		void Quit()
+		{
+
+		}
+
+		uint32_t GetOption(const uint32_t *key)
+		{
+			return 0;
+		}
+	}
 }

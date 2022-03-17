@@ -1,6 +1,6 @@
 /*
  * [PSXFunkin-n00b]
- *   Main.cpp
+ *   MainLoop.cpp
  * Author(s): Regan Green
  * Date: 03/15/2022
 
@@ -9,12 +9,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "Main.h"
+#include "MainLoop.h"
 
 #include "Backend/Timer.h"
 #include "Backend/GPU.h"
 #include "Backend/CD.h"
 #include "Backend/DLL.h"
+#include "Backend/Data.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -24,18 +25,21 @@ void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	// Main
 	(void*)&MainLoop::NextLibrary,
 
+	// GPU
+	(void*)&Backend::GPU::Flip,
+	(void*)&Backend::GPU::AllocPrim,
+
 	// Timer
 	(void*)&Backend::Timer::GetTicks,
 
-	// GPU
-	(void*)&Backend::GPU::Flip,
-	(void*)&Backend::GPU::AllocPrim
+	// Data
+	(void*)&Backend::Data::GetOption
 };
 
 // Main loop functions
 namespace MainLoop
 {
-	static char next_library[16];
+	static char next_library[32];
 
 	void NextLibrary(const char *name)
 	{
@@ -55,6 +59,7 @@ int main(int argc, char *argv[])
 	Backend::Timer::Init();
 	Backend::CD::Init();
 	Backend::DLL::Init();
+	Backend::Data::Init();
 
 	// Run game loop
 	MainLoop::NextLibrary("\\MENU.DLL;1");
@@ -62,7 +67,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		// Load library file
-		printf("Loading library %s\n", MainLoop::next_library);
+		printf("Loading library %08X %08X\n", Hash::FromString(MainLoop::next_library), "\\MENU.DLL;1"_h);
 		Backend::CD::File file(MainLoop::next_library);
 		if (!file)
 		{
@@ -90,12 +95,14 @@ int main(int argc, char *argv[])
 				else
 				{
 					DL_PRE_CALL(library_run);
+					library_run();
 				}
 			}
 		}
 	}
 
 	// Deinitialize backend systems
+	Backend::Data::Quit();
 	Backend::DLL::Quit();
 	Backend::CD::Quit();
 	Backend::Timer::Quit();

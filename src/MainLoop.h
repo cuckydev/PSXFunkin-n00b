@@ -1,6 +1,6 @@
 /*
  * [PSXFunkin-n00b]
- *   Main.h
+ *   MainLoop.h
  * Author(s): Regan Green
  * Date: 03/15/2022
 

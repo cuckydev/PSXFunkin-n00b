@@ -11,7 +11,7 @@
 
 #include "Week1.h"
 
-#include "Main.h"
+#include "MainLoop.h"
 #include "Backend/GPU.h"
 
 #include <stdio.h>

@@ -5,16 +5,15 @@ project(
 	LANGUAGES    C CXX ASM
 	VERSION      1.0.0
 	DESCRIPTION  "PSXFunkin"
-	HOMEPAGE_URL "https://cuckydev.staropa.net/"
+	HOMEPAGE_URL "https://ckdev.org"
 )
 
 # Main executable
 psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	# Program
-	"src/Main.cpp"
-	"src/Main.h"
+	"src/MainLoop.cpp"
+	"src/MainLoop.h"
 	"src/Types.h"
-	"src/Saxman.h"
 
 	# Backend
 	"src/Backend/GPU.cpp"
@@ -25,6 +24,8 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	"src/Backend/CD.h"
 	"src/Backend/DLL.cpp"
 	"src/Backend/DLL.h"
+	"src/Backend/Data.cpp"
+	"src/Backend/Data.h"
 )
 target_include_directories(PSXFunkin PRIVATE "src")
 
