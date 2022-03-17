@@ -84,8 +84,6 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		// Load library file
-		printf("ERROR: %s\n", Main::library_error);
-		Main::library_error[0] = '\0';
 		printf("Loading library %s\n", Main::library_next);
 		Backend::CD::File file(Main::library_next);
 		if (!file)

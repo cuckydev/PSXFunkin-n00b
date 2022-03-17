@@ -9,7 +9,7 @@ set(SAVE_NAME ${CMAKE_MATCH_1}-${CMAKE_MATCH_2}${CMAKE_MATCH_3})
 project(
 	PSn00bSDK-PSXFunkin
 	LANGUAGES    C CXX ASM
-	VERSION      1.0.1
+	VERSION      0.0.1
 	DESCRIPTION  "PSXFunkin"
 	HOMEPAGE_URL "https://ckdev.org"
 )
