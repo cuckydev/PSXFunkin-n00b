@@ -11,10 +11,15 @@
 
 #include "Data.h"
 
+#include "HashMap.h"
+
 namespace Backend
 {
 	namespace Data
 	{
+		// Data state
+		HashMap::TreeHashMap<4> data_hashmap;
+
 		// Data functions
 		void Init()
 		{
@@ -26,9 +31,14 @@ namespace Backend
 
 		}
 
-		uint32_t GetOption(const uint32_t *key)
+		uint32_t GetValue(const uint32_t *key)
 		{
-			return 0;
+			return data_hashmap.Get(key);
+		}
+
+		void SetValue(const uint32_t *key, uint32_t value)
+		{
+			data_hashmap.Set(key, value);
 		}
 	}
 }

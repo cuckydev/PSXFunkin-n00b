@@ -35,7 +35,8 @@ void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	(void*)&Backend::Timer::GetTicks,
 
 	// Data
-	(void*)&Backend::Data::GetOption
+	(void*)&Backend::Data::GetValue,
+	(void*)&Backend::Data::SetValue
 };
 
 // Main loop functions

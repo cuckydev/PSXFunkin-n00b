@@ -34,6 +34,8 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	"src/Main.cpp"
 	"src/Main.h"
 	"src/Types.h"
+	"src/Hash.h"
+	"src/HashMap.h"
 
 	# Backend
 	"src/Backend/GPU.cpp"

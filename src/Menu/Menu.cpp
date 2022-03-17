@@ -19,7 +19,6 @@ void Run()
 	// Check main version
 	if (Main::VersionCheck(Main::VersionPack(FUNK_VERSION_MAJOR, FUNK_VERSION_MINOR, FUNK_VERSION_PATCH)))
 	{
-		Main::LibraryError("Version error");
 		return;
 	}
 

@@ -21,6 +21,7 @@ namespace Backend
 		void Init();
 		void Quit();
 
-		uint32_t GetOption(const uint32_t *key);
+		uint32_t GetValue(const uint32_t *key);
+		void SetValue(const uint32_t *key, uint32_t value);
 	}
 }
