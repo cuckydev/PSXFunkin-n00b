@@ -46,11 +46,9 @@ You'll also need to install `ffmpeg` (you may also need to install `avformat`, `
 ## Compiling PSn00bSDK
 First, `cd` to somewhere safe where you can put source code (such as `Documents` or the PSXFunkin folder). Then run these few commands.
 
-- `git clone https://github.com/spicyjpeg/PSn00bSDK`
+- `git clone https://github.com/spicyjpeg/PSn00bSDK -b psxmdec`
 
 - `cd PSn00bSDK`
-
-- `git checkout psxmdec`
 
 - `git submodule update --init --recursive --remote`
 
