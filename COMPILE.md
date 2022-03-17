@@ -52,7 +52,7 @@ First, `cd` to somewhere safe where you can put source code (such as `Documents`
 
 - `git submodule update --init --recursive --remote`
 
-- `cmake --preset default . --install-prefix /usr/local/` (Linux users can change install-prefix to whatever they want, MSYS2 users should not touch it at all)
+- `cmake --preset default . -DMKPSXISO_NO_LIBFLAC=1 --install-prefix /usr/local/` (Linux users can change install-prefix to whatever they want, MSYS2 users should not touch it at all)
 
 - `cmake --build ./build`
 
