@@ -11,7 +11,7 @@
 
 #include "Week1.h"
 
-#include "MainLoop.h"
+#include "Main.h"
 #include "Backend/GPU.h"
 
 #include <stdio.h>
@@ -19,8 +19,8 @@
 // Game state interface
 void Run()
 {
+	// Debug scene
 	Backend::GPU::Layer layer_hud;
-
 	while (1)
 	{
 		layer_hud.SetView(0, 0, 0, FIXED_UNIT);

@@ -11,10 +11,19 @@
 
 #include "Menu.h"
 
-#include "MainLoop.h"
+#include "Main.h"
 
 // Game state interface
 void Run()
 {
-	MainLoop::NextLibrary("\\WEEK1.DLL;1");
+	// Check main version
+	if (Main::VersionCheck(Main::VersionPack(FUNK_VERSION_MAJOR, FUNK_VERSION_MINOR, FUNK_VERSION_PATCH)))
+	{
+		Main::LibraryError("Version error");
+		return;
+	}
+
+	// Immediately run Week 1
+	Main::LibraryNext("\\WEEK1.DLL;1");
+	return;
 }

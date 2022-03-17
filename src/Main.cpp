@@ -1,6 +1,6 @@
 /*
  * [PSXFunkin-n00b]
- *   MainLoop.cpp
+ *   Main.cpp
  * Author(s): Regan Green
  * Date: 03/15/2022
 
@@ -9,7 +9,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "MainLoop.h"
+#include "Main.h"
 
 #include "Backend/Timer.h"
 #include "Backend/GPU.h"
@@ -23,7 +23,9 @@
 // Functions exposed to libraries
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	// Main
-	(void*)&MainLoop::NextLibrary,
+	(void*)&Main::LibraryError,
+	(void*)&Main::LibraryNext,
+	(void*)&Main::VersionCheck,
 
 	// GPU
 	(void*)&Backend::GPU::Flip,
@@ -37,14 +39,29 @@ void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 };
 
 // Main loop functions
-namespace MainLoop
+namespace Main
 {
-	static char next_library[32];
+	static char library_error[256];
+	static char library_next[32];
 
-	void NextLibrary(const char *name)
+	void LibraryError(const char *message)
+	{
+		// Set library error
+		strcpy(library_error, message);
+		strcpy(library_next, "\\MENU.DLL;1");
+	}
+
+	void LibraryNext(const char *name)
 	{
 		// Set next library name
-		strcpy(next_library, name);
+		strcpy(library_next, name);
+	}
+
+	bool VersionCheck(uint32_t version)
+	{
+		if (version > VersionPack(FUNK_VERSION_MAJOR, FUNK_VERSION_MINOR, FUNK_VERSION_PATCH))
+			return true;
+		return false;
 	}
 }
 
@@ -62,13 +79,15 @@ int main(int argc, char *argv[])
 	Backend::Data::Init();
 
 	// Run game loop
-	MainLoop::NextLibrary("\\MENU.DLL;1");
+	Main::LibraryNext("\\MENU.DLL;1");
 
 	while (1)
 	{
 		// Load library file
-		printf("Loading library %08X %08X\n", Hash::FromString(MainLoop::next_library), "\\MENU.DLL;1"_h);
-		Backend::CD::File file(MainLoop::next_library);
+		printf("ERROR: %s\n", Main::library_error);
+		Main::library_error[0] = '\0';
+		printf("Loading library %s\n", Main::library_next);
+		Backend::CD::File file(Main::library_next);
 		if (!file)
 		{
 			printf("Failed to load library file\n");

@@ -9,16 +9,30 @@ set(SAVE_NAME ${CMAKE_MATCH_1}-${CMAKE_MATCH_2}${CMAKE_MATCH_3})
 project(
 	PSn00bSDK-PSXFunkin
 	LANGUAGES    C CXX ASM
-	VERSION      1.0.0
+	VERSION      1.0.1
 	DESCRIPTION  "PSXFunkin"
 	HOMEPAGE_URL "https://ckdev.org"
 )
 
+# Common definition interface
+add_library(common_defs INTERFACE)
+
+target_compile_definitions(
+    common_defs INTERFACE
+    TITLE_ID="${TITLE_ID}"
+    SAVE_NAME="${SAVE_NAME}"
+    FUNK_VERSION="${PROJECT_VERSION}"
+    FUNK_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+    FUNK_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+    FUNK_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+)
+target_include_directories(common_defs INTERFACE "src")
+
 # Main executable
 psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	# Program
-	"src/MainLoop.cpp"
-	"src/MainLoop.h"
+	"src/Main.cpp"
+	"src/Main.h"
 	"src/Types.h"
 
 	# Backend
@@ -33,7 +47,7 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	"src/Backend/Data.cpp"
 	"src/Backend/Data.h"
 )
-target_include_directories(PSXFunkin PRIVATE "src")
+target_link_libraries(PSXFunkin common_defs)
 
 # Libraries
 psn00bsdk_add_library(PSXFunkin_Menu SHARED
@@ -41,19 +55,14 @@ psn00bsdk_add_library(PSXFunkin_Menu SHARED
 	"src/Menu/Menu.cpp"
 	"src/Menu/Menu.h"
 )
-target_include_directories(PSXFunkin_Menu PRIVATE "src")
+target_link_libraries(PSXFunkin_Menu common_defs)
 
 psn00bsdk_add_library(PSXFunkin_Week1 SHARED
 	# Program
 	"src/Week1/Week1.cpp"
 	"src/Week1/Week1.h"
 )
-target_include_directories(PSXFunkin_Week1 PRIVATE "src")
-
-# Compiler definitions
-target_compile_definitions(PSXFunkin PRIVATE "TITLE_ID=\"${TITLE_ID}\"")
-target_compile_definitions(PSXFunkin PRIVATE "EXE_NAME=\"${EXE_NAME}\"")
-target_compile_definitions(PSXFunkin PRIVATE "SAVE_NAME=\"${SAVE_NAME}\"")
+target_link_libraries(PSXFunkin_Week1 common_defs)
 
 # System config file
 file(
