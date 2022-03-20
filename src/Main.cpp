@@ -24,10 +24,10 @@
 
 // Functions exposed to libraries
 #define PUBLIC(a) (void*)&a,
-
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
 	#include "Public.h"
 };
+#undef PUBLIC
 
 // Main loop functions
 namespace Main
