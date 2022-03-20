@@ -23,24 +23,10 @@
 #include <string.h>
 
 // Functions exposed to libraries
+#define PUBLIC(a) (void*)&a,
+
 void *DO_NOT_STRIP[] __attribute__((section(".dummy"))) = {
-	// Main
-	(void*)&Main::LibraryNext,
-	(void*)&Main::LibraryGetValue,
-	(void*)&Main::LibrarySetValue,
-	(void*)&Main::LibraryClearValue,
-	(void*)&Main::VersionCheck,
-
-	// GPU
-	(void*)&Backend::GPU::Flip,
-	(void*)&Backend::GPU::AllocPrim,
-
-	// Timer
-	(void*)&Backend::Timer::GetTicks,
-
-	// Data
-	(void*)&Backend::Data::GetValue,
-	(void*)&Backend::Data::SetValue
+	#include "Public.h"
 };
 
 // Main loop functions
@@ -128,6 +114,9 @@ int main(int argc, char *argv[])
 					library_run();
 				}
 			}
+
+			// Close library file
+			file.Close();
 		}
 	}
 

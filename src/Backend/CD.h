@@ -32,7 +32,7 @@ namespace Backend
 				// Constructors and destructor
 				File() {}
 				File(const char *name) { Open(name); }
-				~File() { free(ptr); }
+				~File() {}
 
 				// File functions
 				File &Open(const char *name);

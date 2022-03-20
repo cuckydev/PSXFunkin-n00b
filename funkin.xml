@@ -16,7 +16,7 @@
 			<file name="SYSTEM.CNF" type="data" source="SYSTEM.CNF"/>
 
 			<file name="${TITLE_ID}" type="data" source="PSXFunkin.exe"/>
-			<file name="MAIN.MAP" type="data" source="PSXFunkin.map" />
+			<file name="MAIN.MAP" type="data" source="publicmap.bin" />
 
 			<file name="MENU.DLL"  type="data" source="PSXFunkin_Menu.dll" />
 			<file name="WEEK1.DLL" type="data" source="PSXFunkin_Week1.dll" />

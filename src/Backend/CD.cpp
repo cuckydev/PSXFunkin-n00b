@@ -49,7 +49,8 @@ namespace Backend
 
 		void File::Close()
 		{
-
+			// Free buffer
+			free(ptr);
 		}
 
 		// CD functions

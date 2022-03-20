@@ -18,7 +18,7 @@ namespace Backend
 	namespace Data
 	{
 		// Data state
-		HashMap::TreeHashMap<4> data_hashmap;
+		static HashMap::TreeHashMap<4> data_hashmap;
 
 		// Data functions
 		void Init()

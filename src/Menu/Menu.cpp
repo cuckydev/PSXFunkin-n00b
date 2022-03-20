@@ -19,11 +19,13 @@ void Run()
 	// Check main version
 	if (Main::VersionCheck(Main::VersionPack(FUNK_VERSION_MAJOR, FUNK_VERSION_MINOR, FUNK_VERSION_PATCH)))
 	{
-		return;
+		// We may encounter issues referencing this version of Main
 	}
 
-	// Immediately run Week 1
+	// Immediately run Bopeebo
+	Main::LibrarySetValue("stage"_h, 0);
 	Main::LibrarySetValue("difficulty"_h, 2);
+
 	Main::LibraryNext("\\WEEK1.DLL;1");
 	return;
 }

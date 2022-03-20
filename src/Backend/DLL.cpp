@@ -12,6 +12,7 @@
 #include "Backend/DLL.h"
 
 #include "Backend/CD.h"
+#include "Hash.h"
 
 #include <stdio.h>
 
@@ -66,12 +67,21 @@ namespace Backend
 				return;
 			}
 
-			// Parse .MAP file
-			if (!DL_ParseSymbolMap((char*)file_map.ptr, file_map.len))
-			{
-				printf("Failed to parse MAIN.MAP");
-				return;
-			}
+			// Set resolve callback
+			static uint32_t *map_data = (uint32_t*)file_map.ptr;
+			static uint32_t map_size = *map_data++;
+
+			DL_SetResolveCallback([](_DLL *dll, const char *name){
+				// Hash name and compare
+				uint32_t hash = Hash::FromString(name);
+				uint32_t *mapp = map_data;
+				for (uint32_t i = 0; i < map_size; i++, mapp += 2)
+				{
+					if (mapp[0] == hash)
+						return (void*)mapp[1];
+				}
+				return (void*)0;
+			});
 		}
 
 		void Quit()
