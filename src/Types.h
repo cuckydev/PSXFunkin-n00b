@@ -20,7 +20,7 @@ template<typename T> struct Rect { T x, y, w, h; };
 typedef int32_t fixed_t;
 typedef uint32_t ufixed_t;
 
-#define FIXED_SHIFT (10)
+#define FIXED_SHIFT (12)
 #define FIXED_UNIT  (1 << FIXED_SHIFT)
 #define FIXED_LAND  (FIXED_UNIT - 1)
 #define FIXED_UAND  (~FIXED_LAND)

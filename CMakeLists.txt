@@ -44,6 +44,7 @@ psn00bsdk_add_executable(PSXFunkin DYNAMIC
 	# Backend
 	"src/Backend/GPU.cpp"
 	"src/Backend/GPU.h"
+	"src/Backend/GPU_inline_n.h"
 	"src/Backend/Timer.cpp"
 	"src/Backend/Timer.h"
 	"src/Backend/CD.cpp"

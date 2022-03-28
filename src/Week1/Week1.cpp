@@ -13,6 +13,7 @@
 
 #include "Main.h"
 #include "Backend/GPU.h"
+#include "Backend/Timer.h"
 
 #include <stdio.h>
 
@@ -20,16 +21,19 @@
 void Run()
 {
 	// Use library values
-	printf("ok i was given difficulty %d\n", Main::LibraryGetValue("difficulty"_h));
+	//printf("ok i was given difficulty %d\n", Main::LibraryGetValue("difficulty"_h));
 
 	// Debug scene
 	Backend::GPU::Layer layer_hud;
 	while (1)
 	{
-		layer_hud.SetView(0, 0, 0, FIXED_UNIT);
+		layer_hud.SetView(0, 0, 0, FIXED_DEC(1,1));
 
-		Rect<fixed_t> porno_rect = {0, 0, FIXED_DEC(32,1), FIXED_DEC(32,1)};
-		layer_hud.FillRect(porno_rect);
+		Rect<int16_t> porno_rect = {0, 0, 32, 32};
+		uint32_t ticks = Backend::Timer::GetTicks();
+		for (int i = 0; i < 512; i++)
+			layer_hud.FillRect(porno_rect);
+		printf("DELTA %d\n", Backend::Timer::GetTicks() - ticks);
 
 		Backend::GPU::Flip();
 	}

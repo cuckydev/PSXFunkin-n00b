@@ -26,7 +26,7 @@ namespace Backend
 			
 			// Buffers
 			u_long ot[1 + GFX_OTLEN]; // Ordering table
-			uint8_t pri[0x2000]; // Primitive buffer
+			uint8_t pri[0x8000]; // Primitive buffer
 			uint8_t *prip;
 		} Buffer;
 

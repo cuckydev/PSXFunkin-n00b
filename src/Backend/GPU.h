@@ -14,6 +14,10 @@
 #include "Types.h"
 
 #include <psxgpu.h>
+#include <psxgte.h>
+#include "GPU_inline_n.h"
+
+#include <stdio.h>
 
 namespace Backend
 {
@@ -53,30 +57,46 @@ namespace Backend
 			private:
 				// Index and positioning
 				unsigned int view_zindex;
-				fixed_t view_x, view_y, view_zoom;
+				int16_t view_x, view_y;
+				fixed_t view_zoom;
+				MATRIX view_matrix;
 
 			public:
 				// Layer functions
-				void SetView(unsigned int zindex, fixed_t x, fixed_t y, fixed_t zoom)
+				void SetView(unsigned int zindex, int16_t x, int16_t y, fixed_t zoom)
 				{
 					view_zindex = zindex;
 					view_x = x;
 					view_y = y;
 					view_zoom = zoom;
+
+					// Construct view matrix
+					view_matrix.m[0][0] = zoom;
+					view_matrix.m[0][1] = 0;
+					view_matrix.m[0][2] = 0;
+					view_matrix.m[1][0] = 0;
+					view_matrix.m[1][1] = zoom;
+					view_matrix.m[1][2] = 0;
+					view_matrix.m[2][0] = 0;
+					view_matrix.m[2][1] = 0;
+					view_matrix.m[2][2] = zoom;
+
+					view_matrix.t[0] = SCREEN_WIDTH2;
+					view_matrix.t[1] = SCREEN_HEIGHT2;
+					view_matrix.t[2] = 0;
+					gte_SetRotMatrix(&view_matrix);
+					gte_SetTransMatrix(&view_matrix);
 				}
 
-				void FillRect(const Rect<fixed_t> &dst, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF)
+				void FillRect(const Rect<int16_t> &dst, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF)
 				{
 					// Get destination coordinates
-					fixed_t left   = dst.x - view_x;
-					fixed_t top    = dst.y - view_y;
-					fixed_t right  = left + dst.w;
-					fixed_t bottom = top  + dst.h;
+					int16_t left   = dst.x;
+					int16_t top    = dst.y;
+					int16_t right  = left + dst.w;
+					int16_t bottom = top  + dst.h;
 
-					left   = (FIXED_MUL(left,   view_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
-					top    = (FIXED_MUL(top,    view_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
-					right  = (FIXED_MUL(right,  view_zoom) >> FIXED_SHIFT) + SCREEN_WIDTH2;
-					bottom = (FIXED_MUL(bottom, view_zoom) >> FIXED_SHIFT) + SCREEN_HEIGHT2;
+					// Use view matrix
 
 					// Setup poly
 					POLY_F4 *poly = (POLY_F4*)AllocPrim(view_zindex, sizeof(POLY_FT4));
@@ -84,17 +104,45 @@ namespace Backend
 					setPolyF4(poly);
 					setRGB0(poly, r, g, b);
 
-					poly->x0 = left;
-					poly->y0 = top;
+					// Use GTE to transform vectors
+					SVECTOR vi;
+					VECTOR vo;
 
-					poly->x1 = right;
-					poly->y1 = top;
+					vi.vx = left;
+					vi.vy = top;
+					gte_ldv0(&vi);
+					gte_mvmva(1, 0, 0, 0, 0);
+					gte_stlvnl0(&vo.vx);
+					gte_stlvnl1(&vo.vy);
+					poly->x0 = vo.vx;
+					poly->y0 = vo.vy;
 
-					poly->x2 = left;
-					poly->y2 = bottom;
+					vi.vx = right;
+					vi.vy = top;
+					gte_ldv0(&vi);
+					gte_mvmva(1, 0, 0, 0, 0);
+					gte_stlvnl0(&vo.vx);
+					gte_stlvnl1(&vo.vy);
+					poly->x1 = vo.vx;
+					poly->y1 = vo.vy;
 
-					poly->x3 = right;
-					poly->y3 = bottom;
+					vi.vx = left;
+					vi.vy = bottom;
+					gte_ldv0(&vi);
+					gte_mvmva(1, 0, 0, 0, 0);
+					gte_stlvnl0(&vo.vx);
+					gte_stlvnl1(&vo.vy);
+					poly->x2 = vo.vx;
+					poly->y2 = vo.vy;
+
+					vi.vx = right;
+					vi.vy = bottom;
+					gte_ldv0(&vi);
+					gte_mvmva(1, 0, 0, 0, 0);
+					gte_stlvnl0(&vo.vx);
+					gte_stlvnl1(&vo.vy);
+					poly->x3 = vo.vx;
+					poly->y3 = vo.vy;
 				}
 
 				void BlendRect(const Rect<fixed_t> &dst, BlendMode blend, uint8_t r = 0xFF, uint8_t g = 0xFF, uint8_t b = 0xFF);
