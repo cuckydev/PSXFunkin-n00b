@@ -60,6 +60,11 @@ namespace Backend
 					break;
 			}
 
+			//Set draw background
+			buffer[0].draw.isbg = buffer[1].draw.isbg = 1;
+			setRGB0(&buffer[0].draw, 0, 0, 0);
+			setRGB0(&buffer[1].draw, 0, 0, 0);
+
 			// Load font
 			FntLoad(960, 0);
 			FntOpen(0, 8, 320, 224, 0, 100);

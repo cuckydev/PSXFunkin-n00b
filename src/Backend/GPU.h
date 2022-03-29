@@ -110,7 +110,7 @@ namespace Backend
 
 					vi.vx = left;
 					vi.vy = top;
-					gte_ldv0(&vi);
+					gte_ldv0xy(&vi);
 					gte_mvmva(1, 0, 0, 0, 0);
 					gte_stlvnl0(&vo.vx);
 					gte_stlvnl1(&vo.vy);
@@ -119,7 +119,7 @@ namespace Backend
 
 					vi.vx = right;
 					vi.vy = top;
-					gte_ldv0(&vi);
+					gte_ldv0xy(&vi);
 					gte_mvmva(1, 0, 0, 0, 0);
 					gte_stlvnl0(&vo.vx);
 					gte_stlvnl1(&vo.vy);
@@ -128,7 +128,7 @@ namespace Backend
 
 					vi.vx = left;
 					vi.vy = bottom;
-					gte_ldv0(&vi);
+					gte_ldv0xy(&vi);
 					gte_mvmva(1, 0, 0, 0, 0);
 					gte_stlvnl0(&vo.vx);
 					gte_stlvnl1(&vo.vy);
@@ -137,7 +137,7 @@ namespace Backend
 
 					vi.vx = right;
 					vi.vy = bottom;
-					gte_ldv0(&vi);
+					gte_ldv0xy(&vi);
 					gte_mvmva(1, 0, 0, 0, 0);
 					gte_stlvnl0(&vo.vx);
 					gte_stlvnl1(&vo.vy);

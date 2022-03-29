@@ -6,6 +6,12 @@
  * Type 1 functions
  */
 
+#define gte_ldv0xy(r0)        \
+    __asm__ volatile(         \
+        "lwc2   $0, 0( %0 );" \
+        :                     \
+        : "r"(r0))
+
 #define gte_ldv0(r0)          \
     __asm__ volatile(         \
         "lwc2   $0, 0( %0 );" \

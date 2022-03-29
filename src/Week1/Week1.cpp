@@ -33,7 +33,7 @@ void Run()
 		uint32_t ticks = Backend::Timer::GetTicks();
 		for (int i = 0; i < 512; i++)
 			layer_hud.FillRect(porno_rect);
-		printf("DELTA %d\n", Backend::Timer::GetTicks() - ticks);
+		FntPrint(0, "DELTA %d\n", Backend::Timer::GetTicks() - ticks);
 
 		Backend::GPU::Flip();
 	}

@@ -11,6 +11,8 @@
 
 PUBLIC(printf)
 
+PUBLIC(FntPrint)
+
 PUBLIC(Main::LibraryNext)
 PUBLIC(Main::LibraryGetValue)
 PUBLIC(Main::LibrarySetValue)
