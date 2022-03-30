@@ -83,33 +83,36 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		// Load library file
-		printf("Loading library %s\n", Main::library_next);
+		CRITICAL_PRINT("Loading library %s\n", Main::library_next);
 		Backend::CD::File file(Main::library_next);
 		if (!file)
 		{
-			printf("Failed to load library file\n");
+			CRITICAL_PRINT("Failed to load library file\n");
 			return 1;
 		}
 		else
 		{
 			// Load DLL library
+			CRITICAL_PRINT("Loading DLL library\n");
 			Backend::DLL::Library library(file.ptr, file.len);
 			if (!library)
 			{
-				printf("Failed to load library\n");
+				CRITICAL_PRINT("Failed to load library\n");
 				return 1;
 			}
 			else
 			{
 				// Run library
+				CRITICAL_PRINT("Getting DLL entry\n");
 				void (*library_run)() = (void(*)())library.GetSymbol("Run");
 				if (library_run == nullptr)
 				{
-					printf("Failed to get \"Run\" in library\n");
+					CRITICAL_PRINT("Failed to get \"Run\" in library\n");
 					return 1;
 				}
 				else
 				{
+					CRITICAL_PRINT("Running DLL entry\n");
 					DL_PRE_CALL(library_run);
 					library_run();
 				}

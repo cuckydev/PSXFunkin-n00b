@@ -15,6 +15,8 @@
 
 #include <stdint.h>
 
+#define CRITICAL_PRINT(...) { for (int i = 0; i < 15; i++) { FntPrint(0, __VA_ARGS__); Backend::GPU::Flip(); } }
+
 namespace Main
 {
 	// Main loop functions

@@ -84,6 +84,7 @@ namespace Backend
 					view_matrix.t[0] = SCREEN_WIDTH2;
 					view_matrix.t[1] = SCREEN_HEIGHT2;
 					view_matrix.t[2] = 0;
+
 					gte_SetRotMatrix(&view_matrix);
 					gte_SetTransMatrix(&view_matrix);
 				}

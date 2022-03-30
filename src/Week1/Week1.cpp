@@ -30,10 +30,12 @@ void Run()
 		layer_hud.SetView(0, 0, 0, FIXED_DEC(1,1));
 
 		Rect<int16_t> porno_rect = {0, 0, 32, 32};
+		//CRITICAL_PRINT("Doing our thing..\n");
 		uint32_t ticks = Backend::Timer::GetTicks();
 		for (int i = 0; i < 512; i++)
 			layer_hud.FillRect(porno_rect);
-		FntPrint(0, "DELTA %d\n", Backend::Timer::GetTicks() - ticks);
+		ticks = Backend::Timer::GetTicks() - ticks;
+		//CRITICAL_PRINT("DELTA %d\n", ticks);
 
 		Backend::GPU::Flip();
 	}
